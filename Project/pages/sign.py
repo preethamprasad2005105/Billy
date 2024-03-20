@@ -18,9 +18,9 @@ class Sign(UserControl):
     def build(self):
 
         self.username =  TextField(label='USERNAME',hint_text='USERNAME', border_color=colors.PURPLE_100)
-        self.key =TextField(label='PASSWORD',hint_text='PASSWORD', border_color=colors.PURPLE_100)
+        self.key =TextField(label='PASSWORD',hint_text='PASSWORD', border_color=colors.PURPLE_100, password= True, can_reveal_password= True)
         self.email = TextField(label='EMAIL',hint_text='EMAIL', border_color=colors.PURPLE_100)
-        self.key_confirm = TextField(label='CONFIRM PASSWORD',hint_text='CONFIRM PASSWORD', border_color=colors.PURPLE_100, on_change=self.pasw_check)
+        self.key_confirm = TextField(label='CONFIRM PASSWORD',hint_text='CONFIRM PASSWORD', border_color=colors.PURPLE_100, on_change=self.pasw_check, password= True, can_reveal_password= True)
 
 
         self.buttons = Container(content=Row(controls=[

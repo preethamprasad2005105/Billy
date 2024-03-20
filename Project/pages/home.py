@@ -7,7 +7,13 @@ class Home(UserControl):
     def __init__(self, page: Page):
         super().__init__()
         self.page = page
-        self.final = TextButton(text='hello', on_click= lambda _: self.page.go('/'))
-    
+        self.warn = Text('To add invoice press', 
+        color=colors.GREY_700)
+        self.final = Row(controls=[self.warn, 
+        Icon(icons.ADD_CIRCLE_ROUNDED,color=colors.GREY_700)
+        ], alignment= MainAxisAlignment.CENTER)
+
+
     def build(self):
         return SafeArea(content=self.final)
+        

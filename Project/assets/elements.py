@@ -6,7 +6,7 @@ class MyField(TextField):
     def __init__(self, text):
         
         super().__init__(
-            border_color = "#31133b",
+            border_color= colors.DEEP_PURPLE_100,
             focused_border_color= colors.PURPLE_100
         )
         
@@ -28,8 +28,8 @@ class MyPass(TextField):
     def __init__(self, text):
         
         super().__init__(
-            border_color = colors.PURPLE_100,
             password= True,
+            border_color = colors.DEEP_PURPLE_100,
             can_reveal_password= True
             
         )
@@ -39,7 +39,6 @@ class MyPass(TextField):
 
         self.final = TextField(
             hint_text= self.hint_text,
-            border_color = self.border_color,
             label = self.label,
         )
     

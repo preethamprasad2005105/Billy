@@ -6,7 +6,8 @@ from pages.front import Front
 from pages.sign import Sign
 from pages.bill import Bill
 import json
-
+import time
+from pages.start import Start
 
 def main(page:Page):
 
@@ -14,18 +15,16 @@ def main(page:Page):
         "bahnschrift": "fonts/BAHNSCHRIFT.ttf"
     }
     page.theme_mode = 'dark'
-    page.vertical_alignment = 'center'
-    page.horizontal_alignment = 'center'
+    page.vertical_alignment = MainAxisAlignment.CENTER,
+    page.horizontal_alignment = CrossAxisAlignment.CENTER,
     page.theme = Theme(color_scheme_seed=colors.PURPLE, font_family='bahnschrift')
 
-    with open("Data.json") as data:
-        read = json.load(data)
-
+    ref = Home(page = Page)
+    run = True
 
     def route_change(route):
-
         page.views.clear()
-        if not read['Session']:
+        if run:
             page.views.append(
                 View(
                     route='/',
@@ -35,22 +34,43 @@ def main(page:Page):
                         bgcolor= '#220c24',
                         adaptive= True,
                         elevation= 3,
-                        center_title = True
+                        center_title = True,
                         ),
-                        Front(page= Page)
+                        Start(page= Page),
                     ],
+                    scroll= ScrollMode.AUTO,
                     vertical_alignment= MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
 
                 )
             )
-
-        else:
+        if not run:
             page.views.append(
                 View(
                     route='/',
                     controls=[
-                        Home(page = Page)
+                        AppBar(
+                        title=Text('Billy'),
+                        bgcolor= '#220c24',
+                        adaptive= True,
+                        elevation= 3,
+                        center_title = True,
+
+                        ),
+                        Front(page= Page),
+                    ],
+                    scroll= ScrollMode.AUTO,
+                    vertical_alignment= MainAxisAlignment.CENTER,
+                    horizontal_alignment=CrossAxisAlignment.CENTER,
+
+                )
+            )
+        if page.route == '/home':
+            page.views.append(
+                View(
+                    route='/home',
+                    controls=[
+                        ref
                     ],
                     vertical_alignment= MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
@@ -61,6 +81,9 @@ def main(page:Page):
                         elevation= 3,
                         center_title = True,
                         ),
+                    floating_action_button= FloatingActionButton(
+                        icon=icons.ADD, on_click= lambda _: ref.add_invoice()
+                    )
                 )
             )
 
