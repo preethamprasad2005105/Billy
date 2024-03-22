@@ -6,9 +6,9 @@ import json
 
 class Login(UserControl):
     
-    def __init__(self, page: Page, url = '/add'):
+    def __init__(self, url = '/home'):
         super().__init__()
-        self.page = page
+        self.page = Page
         self.url = url
 
 
@@ -46,8 +46,7 @@ class Login(UserControl):
                 content=self.column,
                 margin= margin.symmetric(20,20),
                 ),
-            ),
-            Text("App by Preetham Prasad", color= colors.GREY_600)],
+            )],
             alignment= MainAxisAlignment.CENTER,
             horizontal_alignment= CrossAxisAlignment.CENTER,
             spacing= 30)

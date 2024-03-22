@@ -1,70 +1,87 @@
-import flet as ft
+import sqlite3
+from datetime import datetime
 
 
-class Message(ft.Container):
-    def __init__(self, author, body):
-        super().__init__()
-        self.content = ft.Column(
-            controls=[
-                ft.Text(author, weight=ft.FontWeight.BOLD),
-                ft.Text(body),
-            ],
-        )
-        self.border = ft.border.all(1, ft.colors.BLACK)
-        self.border_radius = ft.border_radius.all(10)
-        self.bgcolor = ft.colors.GREEN_200
-        self.padding = 10
+class Billy:
+    def _init_(self, db_file):
+        self.conn = sqlite3.connect(db_file)
+        self.cur = self.conn.cursor()
+        self.create_table()
+
+    def create_table(self):
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS invoices (
+                              invoice_no INTEGER PRIMARY KEY,
+                              company_name TEXT,
+                              product_sold TEXT,
+                              amount REAL,
+                              gst REAL,
+                              date DATE)''')
+                              
+        self.conn.commit()
+
+    def create_invoice(self, company_name, product_sold, amount, gst):
+        date = datetime.now().strftime('%Y-%m-%d')
+        sql = "INSERT INTO invoices (company_name, product_sold, amount, gst, date) VALUES (?, ?, ?, ?, ?)"
+        val = (company_name, product_sold, amount, gst, date)
+        try:
+            self.cur.execute(sql, val)
+            self.conn.commit()
+            print("Invoice created successfully!")
+        except sqlite3.Error as err:
+            print("Error:", err)
+
+    def display_invoices(self):
+        self.cur.execute("SELECT * FROM invoices")
+        invoices = self.cur.fetchall()
+        if not invoices:
+            print("No invoices found.")
+        else:
+            for invoice in invoices:
+                print("Invoice No:", invoice[0])
+                print("Company Name:", invoice[1])
+                print("Product Sold:", invoice[2])
+                print("Amount:", invoice[3])
+                print("GST:", invoice[4])
+                print("Date:", invoice[5])
+                print("-------------------------")
+
+    def close_connection(self):
+        self.conn.close()
 
 
-def main(page: ft.Page):
-    chat = ft.ListView(
-        padding=10,
-        spacing=10,
-        controls=[
-            ft.Row(
-                alignment=ft.MainAxisAlignment.START,
-                controls=[
-                    Message(
-                        author="John",
-                        body="Hi, how are you?",
-                    ),
-                ],
-            ),
-            ft.Row(
-                alignment=ft.MainAxisAlignment.END,
-                controls=[
-                    Message(
-                        author="Jake",
-                        body="Hi I am good thanks, how about you?",
-                    ),
-                ],
-            ),
-            ft.Row(
-                alignment=ft.MainAxisAlignment.START,
-                controls=[
-                    Message(
-                        author="John",
-                        body="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-                    ),
-                ],
-            ),
-            ft.Row(
-                alignment=ft.MainAxisAlignment.END,
-                controls=[
-                    Message(
-                        author="Jake",
-                        body="Thank you!",
-                    ),
-                ],
-            ),
-        ],
-    )
+if _name_ == "_main_":
+    db_file = "invoices.db"
+    system = Billy(db_file)
 
-    page.window_width = 393
-    page.window_height = 600
-    page.window_always_on_top = False
+    while True:
+        print("\n1. Create Invoice")
+        print("2. Display Invoices")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
 
-    page.add(chat)
+        if choice == '1':
+            company_name = input("Enter Company Name: ")
+            product_sold = input("Enter Product Sold: ")
 
+            while True:
+                try:
+                    amount = float(input("Enter Amount: "))
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a number for amount.")
 
-ft.app(target=main)
+            while True:
+                try:
+                    gst = float(input("Enter GST: "))
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a number for GST.")
+
+            system.create_invoice(company_name, product_sold, amount, gst)
+        elif choice == '2':
+            system.display_invoices()
+        elif choice == '3':
+            system.close_connection()
+            break
+        else:
+            print("Invalid choice. Please try again.")

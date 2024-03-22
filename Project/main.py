@@ -1,5 +1,5 @@
 from flet import * 
-import flet as ft
+import flet
 from pages.login import Login
 from pages.home import Home
 from pages.front import Front
@@ -11,6 +11,12 @@ from pages.start import Start
 
 def main(page:Page):
 
+    H = Home()
+    L = Login()
+    F = Front()
+    S = Sign(Page)
+    B = Bill(H)
+
     page.fonts = {
         "bahnschrift": "fonts/BAHNSCHRIFT.ttf"
     }
@@ -19,11 +25,11 @@ def main(page:Page):
     page.horizontal_alignment = CrossAxisAlignment.CENTER,
     page.theme = Theme(color_scheme_seed=colors.PURPLE, font_family='bahnschrift')
 
-    ref = Home(page = Page)
-    run = True
+    run = False  
 
     def route_change(route):
         page.views.clear()
+
         if run:
             page.views.append(
                 View(
@@ -57,7 +63,7 @@ def main(page:Page):
                         center_title = True,
 
                         ),
-                        Front(page= Page),
+                        Front(),
                     ],
                     scroll= ScrollMode.AUTO,
                     vertical_alignment= MainAxisAlignment.CENTER,
@@ -70,7 +76,7 @@ def main(page:Page):
                 View(
                     route='/home',
                     controls=[
-                        ref
+                        H
                     ],
                     vertical_alignment= MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
@@ -81,12 +87,11 @@ def main(page:Page):
                         elevation= 3,
                         center_title = True,
                         ),
-                    floating_action_button= FloatingActionButton(
-                        icon=icons.ADD, on_click= lambda _: ref.add_invoice()
+                        scroll=ScrollMode.AUTO,
+                        floating_action_button=FloatingActionButton(icon=icons.ADD, on_click = H.new)
+                        
                     )
                 )
-            )
-
 
 
         if page.route == "/login":
@@ -101,7 +106,7 @@ def main(page:Page):
                     elevation= 10
                     ),
                     SafeArea(
-                        content=Login(page = Page)
+                        content=Login()
                     ),
                 ],
                 vertical_alignment= MainAxisAlignment.CENTER,
@@ -141,7 +146,7 @@ def main(page:Page):
                     bgcolor= '#220c24',
                     adaptive= True,
                     elevation= 3),
-                        Bill()
+                        Bill(H)
                     ],
                     vertical_alignment= MainAxisAlignment.CENTER,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
@@ -162,6 +167,7 @@ def main(page:Page):
     page.on_view_pop = view_pop
     page.go(page.route)
 
+    page.update()
 
 
-ft.app(target=main,assets_dir='assets')
+flet.app(target=main,assets_dir='assets')

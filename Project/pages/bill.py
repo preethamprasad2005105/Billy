@@ -1,13 +1,15 @@
 import flet
 from flet import *
 from assets.elements import MyField
+from pages.home import Home
 
 
 class Bill(UserControl):
 
-    def __init__(self):
+    def __init__(self, home : Home):
         super().__init__()
         self.page = Page
+        self.home = home
 
         self.company = MyField(text="Company Name")
         self.gstin = MyField(text="GSTIN")
@@ -18,8 +20,8 @@ class Bill(UserControl):
         self.total_price = MyField(text="Total Including GST")
 
         self.buttons = Row(controls=[
-            FilledTonalButton(content=Text('Submit', scale=1.1), height=50, width=100),
-            FilledTonalButton(content=Text('Exit', scale=1.1), height=50, width=100, on_click= lambda _: self.page.go('/')),
+            FilledTonalButton(content=Text('Submit', scale=1.1), height=50, width=100, on_click= self.invoice_submit),
+            FilledTonalButton(content=Text('Exit', scale=1.1), height=50, width=100, on_click= lambda _: self.page.go('/home')),
         ], alignment=MainAxisAlignment.SPACE_BETWEEN)
 
         self.final = SafeArea(Column(
@@ -37,6 +39,12 @@ class Bill(UserControl):
             spacing= 20,
             horizontal_alignment=CrossAxisAlignment.CENTER,
         ))
+    
+    def invoice_submit(self, e):
+        self.home.add()
+        self.page.go("/home")
+
+
 
     def build(self):
         return self.final
