@@ -24,6 +24,7 @@ def main(page:Page):
     page.vertical_alignment = MainAxisAlignment.CENTER,
     page.horizontal_alignment = CrossAxisAlignment.CENTER,
     page.theme = Theme(color_scheme_seed=colors.PURPLE, font_family='bahnschrift')
+    page.horizontal_alignment = 'center'
 
     run = False  
 

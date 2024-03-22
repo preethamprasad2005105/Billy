@@ -20,7 +20,7 @@ class Bill(UserControl):
         self.total_price = MyField(text="Total Including GST")
 
         self.buttons = Row(controls=[
-            FilledTonalButton(content=Text('Submit', scale=1.1), height=50, width=100, on_click= self.invoice_submit),
+            FilledTonalButton(content=Text('Submit', scale=1.1), height=50, width=100, on_click= lambda _: self.page.go('/home')),
             FilledTonalButton(content=Text('Exit', scale=1.1), height=50, width=100, on_click= lambda _: self.page.go('/home')),
         ], alignment=MainAxisAlignment.SPACE_BETWEEN)
 
@@ -39,10 +39,7 @@ class Bill(UserControl):
             spacing= 20,
             horizontal_alignment=CrossAxisAlignment.CENTER,
         ))
-    
-    def invoice_submit(self, e):
-        self.home.add()
-        self.page.go("/home")
+
 
 
 
